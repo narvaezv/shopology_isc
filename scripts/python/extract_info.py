@@ -31,20 +31,20 @@ class Ticket:
 #python-mysqldb
 #libmysqlclient-dev
 #pip mysql
-def testConnection():
-	db = MySQLdb.connect(host="192.168.43.63", user="root", passwd="admin")
-	c = db.cursor()
-	c.execute("use mydb;")
-	c.execute(""" INSERT INTO store(name) VALUES("La_Tiendita") """)
-	db.commit()
-	db.close()
+#def testConnection():
+#	db = MySQLdb.connect(host="192.168.43.63", user="root", passwd="admin")
+#	c = db.cursor()
+#	c.execute("use mydb;")
+#	c.execute(""" INSERT INTO store(name) VALUES("La_Tiendita") """)
+#	db.commit()
+#	db.close()
 
 def insertToDatabase(tickets):
 	id_branch = randint(1,25)
 
-	#db = MySQLdb.connect(host="192.168.43.63", user="root", passwd="admin")
-	#c = db.cursor()
-	#c.execute("use mydb;")
+	db = MySQLdb.connect(host="192.168.43.63", user="root", passwd="admin")
+	c = db.cursor()
+	c.execute("use mydb;")
 
 	for t in tickets:
 		print("\n================================================")
@@ -52,19 +52,18 @@ def insertToDatabase(tickets):
 		query = "INSERT INTO ticket ""(num_ticket, date, total, id_branch)"" VALUES ({}, '{}', {}, {});"\
 		.format(t.number,t.date,t.total, id_branch)
 		print(query)
-		#c.execute(query)
-		#db.commit(q)
-		#id_ticket = c.lastrowid
-		id_ticket = 12
+		c.execute(query)
+		db.commit(q)
+		id_ticket = c.lastrowid
 		for p in t.products:
 			print("\n------------------------------------")
 			print(p)
 			query2 = "INSERT INTO ticket_item ""(id_ticket, item_name, amount)"" VALUES ({},'{}',{});"\
         	.format(id_ticket, p.name, p.price) 
 			print(query2)
-			#c.execute(query2)
-			#db.commit()
-	#db.close()
+			c.execute(query2)
+			db.commit()
+	db.close()
 
 #Procesa y hace la extraccion de informacion de cada uno de los tickets
 def processData(data):
